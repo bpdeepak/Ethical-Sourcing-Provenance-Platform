@@ -35,14 +35,15 @@ public class SupplierService {
         return repository.findAll();
     }
 
-    public void updateTrustScore(String supplierId, int delta) {
+    public Supplier updateTrustScore(String supplierId, int delta) {
         Optional<Supplier> optionalSupplier = repository.findBySupplierId(supplierId);
         if (optionalSupplier.isPresent()) {
             Supplier supplier = optionalSupplier.get();
             int newScore = supplier.getTrustScore() + delta;
             newScore = Math.max(0, Math.min(100, newScore)); // Clamp between 0 and 100
             supplier.setTrustScore(newScore);
-            repository.save(supplier);
+            return repository.save(supplier);
         }
+        throw new RuntimeException("Supplier not found: " + supplierId);
     }
 }

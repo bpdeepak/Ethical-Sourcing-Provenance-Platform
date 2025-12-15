@@ -29,7 +29,7 @@ public class AuditServiceTest {
     void recordAudit_shouldSaveAudit_whenSupplierExists() {
         // Arrange
         Audit audit = new Audit("SUP-123", "COMPLIANT", "Files verified");
-        when(supplierClient.getTrustScore("SUP-123")).thenReturn(new Object());
+        when(supplierClient.getTrustScore("SUP-123")).thenReturn(new com.ethicalsource.audit.dto.TrustScoreDTO(100, "ACTIVE"));
         when(repository.save(any(Audit.class))).thenReturn(audit);
 
         // Act

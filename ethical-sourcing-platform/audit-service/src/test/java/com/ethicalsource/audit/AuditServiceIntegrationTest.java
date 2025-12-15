@@ -34,7 +34,7 @@ public class AuditServiceIntegrationTest {
     @Test
     public void testRecordAudit_Success() throws Exception {
         // Mock Supplier Client
-        when(supplierClient.getTrustScore("SUP-001")).thenReturn(new Object());
+        when(supplierClient.getTrustScore("SUP-001")).thenReturn(new com.ethicalsource.audit.dto.TrustScoreDTO(100, "ACTIVE"));
         doNothing().when(supplierClient).updateTrustScore(anyString(), anyInt());
 
         String auditJson = """

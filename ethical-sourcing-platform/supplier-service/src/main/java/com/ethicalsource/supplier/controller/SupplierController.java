@@ -35,8 +35,12 @@ public class SupplierController {
                 .orElse(ResponseEntity.notFound().build());
     }
     @PostMapping("/{id}/trust-score")
-    public ResponseEntity<Void> updateTrustScore(@PathVariable String id, @RequestParam int delta) {
-        service.updateTrustScore(id, delta);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Supplier> updateTrustScore(@PathVariable String id, @RequestParam int delta) {
+        try {
+            Supplier updated = service.updateTrustScore(id, delta);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

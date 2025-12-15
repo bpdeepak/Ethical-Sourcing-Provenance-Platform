@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@lombok.extern.slf4j.Slf4j
 public class AuditService {
     private final AuditRepository repository;
     private final com.ethicalsource.audit.client.SupplierClient supplierClient;
@@ -20,23 +21,22 @@ public class AuditService {
         try {
             supplierClient.getTrustScore(audit.getSupplierId());
         } catch (Exception e) {
-            System.err.println("Error verifying supplier: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error verifying supplier {}: {}", audit.getSupplierId(), e.getMessage());
             throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Supplier not found: " + audit.getSupplierId());
         }
 
-        
         Audit savedAudit = repository.save(audit);
 
         // Novel Feature: Dynamic Trust Score Adjustment
         try {
             int delta = "COMPLIANT".equalsIgnoreCase(audit.getComplianceStatus()) ? 5 : -10;
             supplierClient.updateTrustScore(audit.getSupplierId(), delta);
-            System.out.println("Updated trust score for " + audit.getSupplierId() + " with delta: " + delta);
+            log.info("Updated trust score for {} with delta: {}", audit.getSupplierId(), delta);
         } catch (Exception e) {
-             System.err.println("Failed to update trust score: " + e.getMessage());
+             log.warn("Failed to update trust score: {}", e.getMessage());
              // Don't fail the audit recording if score update fails (Resilience)
         }
+
 
         return savedAudit;
     }
