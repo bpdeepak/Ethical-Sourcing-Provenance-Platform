@@ -16,6 +16,7 @@ public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @jakarta.persistence.Column(unique = true)
     private String supplierId; // e.g., "SUP-001"
     private String name;
     private String location;

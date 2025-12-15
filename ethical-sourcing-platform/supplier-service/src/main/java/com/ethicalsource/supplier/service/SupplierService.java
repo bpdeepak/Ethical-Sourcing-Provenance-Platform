@@ -15,6 +15,15 @@ public class SupplierService {
     }
 
     public Supplier registerSupplier(Supplier supplier) {
+        Optional<Supplier> existing = repository.findBySupplierId(supplier.getSupplierId());
+        if (existing.isPresent()) {
+            Supplier s = existing.get();
+            s.setName(supplier.getName());
+            s.setLocation(supplier.getLocation());
+            s.setTrustScore(supplier.getTrustScore());
+            s.setStatus(supplier.getStatus());
+            return repository.save(s);
+        }
         return repository.save(supplier);
     }
 
@@ -24,5 +33,16 @@ public class SupplierService {
     
     public List<Supplier> getAllSuppliers() {
         return repository.findAll();
+    }
+
+    public void updateTrustScore(String supplierId, int delta) {
+        Optional<Supplier> optionalSupplier = repository.findBySupplierId(supplierId);
+        if (optionalSupplier.isPresent()) {
+            Supplier supplier = optionalSupplier.get();
+            int newScore = supplier.getTrustScore() + delta;
+            newScore = Math.max(0, Math.min(100, newScore)); // Clamp between 0 and 100
+            supplier.setTrustScore(newScore);
+            repository.save(supplier);
+        }
     }
 }

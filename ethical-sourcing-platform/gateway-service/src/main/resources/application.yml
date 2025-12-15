@@ -10,7 +10,20 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
-        default-filters:
+      routes:
+        - id: supplier-service
+          uri: lb://supplier-service
+          predicates:
+            - Path=/api/suppliers/**
+        - id: provenance-service
+          uri: lb://provenance-service
+          predicates:
+            - Path=/api/provenance/**
+        - id: audit-service
+          uri: lb://audit-service
+          predicates:
+            - Path=/api/audits/**
+      default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
       globalcors:
         cors-configurations:
@@ -31,4 +44,4 @@ management:
       probability: 1.0
   zipkin:
     tracing:
-      endpoint: ""
+      endpoint: "http://localhost:9411/api/v2/spans"

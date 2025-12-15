@@ -1,6 +1,38 @@
 version: '3.8'
 
 services:
+  audit-service:
+    build: ./audit-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_ZIPKIN_BASE_URL=http://zipkin:9411
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/audit_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      - gateway-service
+      - supplier-service
+      - postgres
+      - discovery-service
+      - zipkin
+    networks:
+      - scm-network
+
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - scm-network
+
   zipkin:
     image: openzipkin/zipkin
     ports:
@@ -56,3 +88,6 @@ services:
 networks:
   scm-network:
     driver: bridge
+
+volumes:
+  postgres-data:

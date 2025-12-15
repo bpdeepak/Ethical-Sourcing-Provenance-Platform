@@ -34,4 +34,9 @@ public class SupplierController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    @PostMapping("/{id}/trust-score")
+    public ResponseEntity<Void> updateTrustScore(@PathVariable String id, @RequestParam int delta) {
+        service.updateTrustScore(id, delta);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -44,13 +44,29 @@ export default function Dashboard() {
     return '#ef4444'; // Red
   };
 
-  // Mock coordinates for demo (since backend doesn't have lat/lng yet)
-  // In a real app, we would geocode the 'location' string
-  const getCoordinates = (_location: string, index: number) => {
-    // Simple deterministic offset to spread points on map
-    const baseLat = 20.5937;
-    const baseLng = 78.9629;
-    return [baseLat + (index * 5), baseLng + (index * 5)];
+  // Map of known locations to coordinates
+  const cityCoordinates: { [key: string]: [number, number] } = {
+    'Berlin': [52.5200, 13.4050],
+    'London': [51.5074, -0.1278],
+    'New York': [40.7128, -74.0060],
+    'Tokyo': [35.6762, 139.6503],
+    'Paris': [48.8566, 2.3522],
+    'Sydney': [-33.8688, 151.2093],
+    'Mumbai': [19.0760, 72.8777],
+    'Shanghai': [31.2304, 121.4737],
+    'São Paulo': [-23.5505, -46.6333],
+    'Cairo': [30.0444, 31.2357]
+  };
+
+  const getCoordinates = (location: string, index: number) => {
+    // Try to find the city in our map
+    if (cityCoordinates[location]) {
+      // Add small jitter so markers don't perfectly overlap if same city
+      const [lat, lng] = cityCoordinates[location];
+      return [lat + (Math.random() - 0.5) * 0.05, lng + (Math.random() - 0.5) * 0.05];
+    }
+    // Fallback: Random location if unknown (Demo purposes)
+    return [20 + (index * 5) % 40, 0 + (index * 10) % 180];
   };
 
   return (

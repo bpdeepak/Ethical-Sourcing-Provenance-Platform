@@ -30,7 +30,7 @@ To satisfy the "minimum 3 services" requirement and the communication syllabus p
 * **Gateway Service:** Spring Cloud Gateway (or Zuul).  
 * **Observability:** Zipkin Server \+ Spring Cloud Sleuth (Micrometer Tracing).
 
----
+---5173
 
 ## **3\. Technical Implementation Guide**
 

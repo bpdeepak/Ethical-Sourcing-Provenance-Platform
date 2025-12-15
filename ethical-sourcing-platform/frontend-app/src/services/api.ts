@@ -18,3 +18,8 @@ export const provenanceService = {
     api.post(`/provenance-service/api/provenance/events?supplierId=${supplierId}`, data),
   getHistory: (assetId: string) => api.get(`/provenance-service/api/provenance/history/${assetId}`),
 };
+
+export const auditService = {
+  recordAudit: (data: any) => api.post('/audit-service/api/audits', data),
+  getAudits: (supplierId: string) => api.get(`/audit-service/api/audits/supplier/${supplierId}`),
+};

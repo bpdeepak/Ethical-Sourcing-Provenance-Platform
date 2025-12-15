@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supplierService } from '../services/api';
+import { supplierService, auditService } from '../services/api';
 import { motion } from 'framer-motion';
 
 export default function SupplierPage() {
@@ -33,6 +33,20 @@ export default function SupplierPage() {
       setFormData({ supplierId: '', name: '', location: '', trustScore: 100, status: 'ACTIVE' });
     } catch (err) {
       alert('Failed to register supplier');
+    }
+  };
+
+  const handleAudit = async (supplierId: string, status: 'COMPLIANT' | 'NON_COMPLIANT') => {
+    try {
+        await auditService.recordAudit({
+            supplierId: supplierId,
+            complianceStatus: status,
+            comments: `Manual audit via Frontend: ${status}`
+        });
+        // Small delay to allow backend to process synchronous update
+        setTimeout(loadSuppliers, 500);
+    } catch (err) {
+        alert('Failed to record audit');
     }
   };
 
@@ -95,14 +109,32 @@ export default function SupplierPage() {
               key={s.id}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="bg-white p-4 rounded-lg shadow border border-slate-100 flex justify-between items-center"
+              className="bg-white p-4 rounded-lg shadow border border-slate-100 flex flex-col gap-4"
             >
-              <div>
-                <p className="font-medium text-slate-900">{s.name}</p>
-                <p className="text-sm text-slate-500">{s.supplierId} • {s.location}</p>
+              <div className="flex justify-between items-center w-full">
+                  <div>
+                    <p className="font-medium text-slate-900">{s.name}</p>
+                    <p className="text-sm text-slate-500">{s.supplierId} • {s.location}</p>
+                  </div>
+                  <div className={`px-3 py-1 rounded-full text-sm font-medium ${s.trustScore > 80 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                    Score: {s.trustScore}
+                  </div>
               </div>
-              <div className={`px-3 py-1 rounded-full text-sm font-medium ${s.trustScore > 80 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                Score: {s.trustScore}
+              
+              {/* Audit Actions (Novel Feature) */}
+              <div className="flex gap-2 justify-end pt-2 border-t border-slate-100">
+                  <button 
+                    onClick={() => handleAudit(s.supplierId, 'COMPLIANT')}
+                    className="text-xs px-3 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 font-medium"
+                  >
+                    Pass Audit (+5)
+                  </button>
+                  <button 
+                    onClick={() => handleAudit(s.supplierId, 'NON_COMPLIANT')}
+                    className="text-xs px-3 py-1 bg-red-50 text-red-600 rounded hover:bg-red-100 font-medium"
+                  >
+                    Fail Audit (-10)
+                  </button>
               </div>
             </motion.div>
           ))}

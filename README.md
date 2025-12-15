@@ -38,6 +38,16 @@ This domain addresses the "Abstract Idea" requirement by implementing a **Digita
     docker-compose up -d --build
     ```
 
+cd discovery-service && ./mvnw clean package -DskipTests
+cd ../gateway-service && ./mvnw clean package -DskipTests
+cd ../supplier-service && ./mvnw clean package -DskipTests
+cd ../provenance-service && ./mvnw clean package -DskipTests
+cd ../audit-service && ./mvnw clean package -DskipTests
+cd ..
+
+
+
+
 3.  **Access Services**
     *   Discovery Service (Eureka): `http://localhost:8761`
     *   Gateway: `http://localhost:8080`
@@ -53,3 +63,5 @@ npm run dev
 
 ## License
 MIT
+
+the testing of the project has benn underwhelming, we are just doing some curl commands, we should use some java testing frameworks to implement some robust testing mechanism
