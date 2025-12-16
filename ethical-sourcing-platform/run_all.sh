@@ -5,10 +5,10 @@ java -jar zipkin/zipkin.jar > logs/zipkin.log 2>&1 &
 echo "Zipkin started (PID: $!)"
 sleep 5
 
-echo "Starting PostgreSQL (Docker)..."
-docker compose up -d postgres
-echo "Waiting for PostgreSQL to be ready (10s)..."
-sleep 10
+# echo "Starting PostgreSQL (Docker)..."
+# docker compose up -d postgres
+# echo "Waiting for PostgreSQL to be ready (10s)..."
+# sleep 10
 
 echo "Starting Discovery Service..."
 nohup java -jar discovery-service/target/discovery-service-0.0.1-SNAPSHOT.jar > logs/discovery.log 2>&1 &

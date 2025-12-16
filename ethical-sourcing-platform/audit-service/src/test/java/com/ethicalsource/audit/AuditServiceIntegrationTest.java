@@ -1,6 +1,6 @@
 package com.ethicalsource.audit;
 
-import com.ethicalsource.audit.domain.Audit;
+// import com.ethicalsource.audit.domain.Audit;
 import com.ethicalsource.audit.repository.AuditRepository;
 import com.ethicalsource.audit.client.SupplierClient;
 import org.junit.jupiter.api.Test;
